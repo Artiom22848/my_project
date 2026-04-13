@@ -56,12 +56,18 @@ html
         @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
 
         /* Контейнер PDF */
-        #pdf-frame {
-            width: 100%; height: 100vh; border: none;
-            opacity: 0; transform: translateY(20px);
+         #pdf-frame {
+            display: block;      /* Делаем блочным */
+            margin: 0 auto;      /* Центрируем по горизонтали */
+            width: 100%;
+            max-width: 950px;    /* Оптимальная ширина для чтения буклета */
+            height: 100vh;
+            border: none;
+            opacity: 0;
+            transform: translateY(20px);
             transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #fff;    /* Белый фон под PDF */
         }
-
         /* Мобильный вид (Luxury Card) */
         .mobile-ui {
             display: none; height: 100vh;
@@ -103,8 +109,8 @@ html
         </div>
     </div>
 
-    <iframe id="pdf-frame" 
-            src="project.pdf#view=FitH&toolbar=0&navpanes=0" 
+   <iframe id="pdf-frame" 
+            src="project.pdf#view=FitH&toolbar=1&navpanes=0" 
             onload="completeLoad()">
     </iframe>
 
