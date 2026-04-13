@@ -3,32 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Просмотр методов</title>
+    <title>Методы: Инструкция и Примеры</title>
     <style>
-        /* Убираем все отступы, чтобы файл был на весь экран */
+        /* Полный экран без прокрутки */
         body, html {
             margin: 0;
             padding: 0;
             height: 100%;
             width: 100%;
             overflow: hidden;
-            background-color: #525659; /* Цвет фона как в читалках */
+            background-color: #333; /* Темный фон вокруг документа */
+            font-family: sans-serif;
         }
-        /* Растягиваем контейнер с PDF */
-        object, embed, iframe {
+
+        /* Контейнер для PDF */
+        .pdf-container {
             width: 100%;
             height: 100%;
             border: none;
         }
+
+        /* Сообщение, если PDF не поддерживается (например, на старых телефонах) */
+        .fallback {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .btn-download {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 24px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
-<object data="project.pdf" type="application/pdf">
-        <embed src="project.pdf" type="application/pdf" />
-        <p>Ваш браузер не поддерживает просмотр PDF. 
-           <a href="project.pdf">Скачайте файл</a>, чтобы просмотреть его.
-        </p>
-    </object>
+
+    <!-- Пытаемся отобразить PDF через тег embed -->
+    <embed src="project.pdf" type="application/pdf" class="pdf-container">
+        <!-- Если embed не сработал, показывается этот блок -->
+        <div class="fallback">
+            <h2>Документ готов к просмотру</h2>
+            <p>Ваш браузер не может отобразить PDF прямо здесь.</p>
+            <a href="project.pdf" class="btn-download" target="_blank">Открыть или Скачать PDF</a>
+        </div>
+    </embed>
 
 </body>
 </html>
