@@ -1,63 +1,153 @@
+html
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Индивидуальный проект</title>
+    <title>Premium Methodology Access</title>
     <style>
-        /* Полный экран без прокрутки */
+        :root {
+            --bg: #050505;
+            --primary: #00f2ff;
+            --secondary: #7000ff;
+            --text: #ffffff;
+        }
+
         body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            width: 100%;
+            margin: 0; padding: 0; height: 100%; width: 100%;
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             overflow: hidden;
-            background-color: #333; /* Темный фон вокруг документа */
-            font-family: sans-serif;
+            user-select: none;
         }
 
-        /* Контейнер для PDF */
-        .pdf-container {
-            width: 100%;
-            height: 100%;
-            border: none;
+        /* Анимированный живой фон */
+        .mesh-gradient {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(112, 0, 255, 0.15) 0%, rgba(5, 5, 5, 1) 100%);
+            z-index: -1;
         }
 
-        /* Сообщение, если PDF не поддерживается (например, на старых телефонах) */
-        .fallback {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            color: white;
-            text-align: center;
-            padding: 20px;
+        /* Индикатор прогресса сверху */
+        #progress-bar {
+            position: fixed; top: 0; left: 0; height: 3px;
+            width: 0%; background: linear-gradient(90deg, var(--primary), var(--secondary));
+            z-index: 1000; transition: width 0.4s ease;
         }
 
-        .btn-download {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 12px 24px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
+        /* Экран загрузки */
+        #loader {
+            position: fixed; inset: 0; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            background: var(--bg); z-index: 999; transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .loader-content { text-align: center; }
+        .shimmer {
+            font-size: 12px; font-weight: bold; letter-spacing: 4px;
+            background: linear-gradient(90deg, #333, #fff, #333);
+            background-size: 200% 100%;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+        /* Контейнер PDF */
+        #pdf-frame {
+            width: 100%; height: 100vh; border: none;
+            opacity: 0; transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Мобильный вид (Luxury Card) */
+        .mobile-ui {
+            display: none; height: 100vh;
+            align-items: center; justify-content: center;
+            padding: 24px; box-sizing: border-box;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 32px; padding: 40px 24px;
+            backdrop-filter: blur(20px); width: 100%; max-width: 340px;
+            text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .btn-premium {
+            display: block; margin-top: 32px; padding: 18px;
+            background: #fff; color: #000; border-radius: 16px;
+            text-decoration: none; font-weight: 700; font-size: 14px;
+            transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(255,255,255,0.2);
+        }
+
+        .btn-premium:active { transform: scale(0.96); opacity: 0.9; }
+
+        @media (max-width: 768px) {
+            #pdf-frame, #loader, #progress-bar { display: none !important; }
+            .mobile-ui { display: flex; }
         }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;">
 
-    <!-- Пытаемся отобразить PDF через тег embed -->
-    <embed src="project.pdf" type="application/pdf" class="pdf-container">
-        <!-- Если embed не сработал, показывается этот блок -->
-        <div class="fallback">
-            <h2>Документ готов к просмотру</h2>
-            <p>Ваш браузер не может отобразить PDF прямо здесь.</p>
-            <a href="project.pdf" class="btn-download" target="_blank">Открыть или Скачать PDF</a>
+    <div id="progress-bar"></div>
+    <div class="mesh-gradient"></div>
+
+    <div id="loader">
+        <div class="loader-content">
+            <div class="shimmer">SYSTEM INITIALIZING</div>
         </div>
-    </embed>
+    </div>
 
+    <iframe id="pdf-frame" 
+            src="project.pdf#view=FitH&toolbar=0&navpanes=0" 
+            onload="completeLoad()">
+    </iframe>
+
+    <div class="mobile-ui">
+        <div class="glass-card">
+            <div style="font-size: 40px; margin-bottom: 20px;">✧</div>
+            <h2 style="font-size: 20px; font-weight: 600; margin: 0;">System Protocol</h2>
+            <p style="font-size: 14px; color: #888; margin-top: 12px; line-height: 1.6;">
+                Ваш документ готов к безопасному просмотру в полноэкранном режиме.
+            </p>
+            <a href="project.pdf" class="btn-premium">ОТКРЫТЬ ДОКУМЕНТ</a>
+        </div>
+    </div>
+
+    <script>
+        // Имитация прогресс-бара
+        let prog = 0;
+        const interval = setInterval(() => {
+            prog += Math.random() * 30;
+            if (prog > 90) prog = 90;
+            document.getElementById('progress-bar').style.width = prog + '%';
+        }, 200);
+
+        function completeLoad() {
+            clearInterval(interval);
+            document.getElementById('progress-bar').style.width = '100%';
+            
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                const frame = document.getElementById('pdf-frame');
+                
+                loader.style.opacity = '0';
+                loader.style.transform = 'scale(1.1)';
+                frame.style.opacity = '1';
+                frame.style.transform = 'translateY(0)';
+                
+                setTimeout(() => { 
+                    loader.style.display = 'none';
+                    document.getElementById('progress-bar').style.opacity = '0';
+                }, 600);
+            }, 400);
+        }
+    </script>
 </body>
 </html>
+ 
